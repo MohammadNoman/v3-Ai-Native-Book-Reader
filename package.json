@@ -1,5 +1,5 @@
 {
-  "name": "ai-native-book-reader",
+  "name": "v2-ai-native-book-reader",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,10 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "@google/genai": "^1.30.0",
+    "@mdx-js/react": "^3.1.1",
+    "@mdx-js/rollup": "^3.1.1",
     "lucide-react": "^0.554.0",
-    "@google/genai": "^1.30.0"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

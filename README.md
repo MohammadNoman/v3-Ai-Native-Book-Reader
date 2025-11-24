@@ -1,6 +1,7 @@
 ![AI-Native Book Reader Banner](project_banner_1763989669771.png)
 
-# AI-Native Book Reader
+# 🚀 AI-Native Speedrun 🚀
+## AI-Native Book Reader
 
 > **Experience the future of learning with an interactive, AI-powered book reader.**
 

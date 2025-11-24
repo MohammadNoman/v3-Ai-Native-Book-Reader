@@ -4,7 +4,8 @@ export interface Chapter {
   id: string;
   title: string;
   subtitle?: string;
-  content: (string | React.ReactElement)[];
+  Component: React.ComponentType;
+  rawContent: string;
 }
 
 export interface Message {

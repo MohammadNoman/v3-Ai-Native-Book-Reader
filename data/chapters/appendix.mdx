@@ -1,0 +1,40 @@
+# 🚀 AI-Native Speedrun 🚀
+## AI-Native & Spec-Driven Software Platform
+
+**From Zero to Production with Docusaurus, FastAPI, Qdrant, and Gemini Agents.**
+
+## 1. Overview
+
+This repository contains the complete source code for a production-grade documentation platform powered by an autonomous multi-agent system. It demonstrates the **Spec-Driven Development** methodology, where AI agents are orchestrated to read documentation, answer queries, and generate code based on rigid specifications.
+
+## 2. Architecture
+
+<div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700 font-mono text-xs overflow-x-auto">
+{`[User Browser]
+      |
+      v
+[Docusaurus SPA] <-----> [FastAPI Backend]
+(React + ChatKit)               |
+                                v
+                       [Agent Orchestrator]
+                       /        |         \\
+                 [RAG Agent] [Coder Agent] [Summary Agent]
+                      |
+                      v
+              [Qdrant Vector DB]
+`}
+</div>
+
+## 3. Directory Structure
+
+<div className="bg-slate-900 p-4 rounded-lg my-4 font-mono text-xs text-brand-100">
+  <div>.</div>
+  <div>├── docs/ <span className="text-slate-500"># Markdown Documentation Source</span></div>
+  <div>├── backend/</div>
+  <div className="pl-4">├── src/</div>
+  <div className="pl-8">├── main.py <span className="text-slate-500"># FastAPI Entrypoint</span></div>
+  <div className="pl-8">├── orchestrator.py <span className="text-slate-500"># Agent Router</span></div>
+  <div className="pl-8">├── skills.py <span className="text-slate-500"># Tool Registry</span></div>
+  <div className="pl-8">├── ingest.py <span className="text-slate-500"># Vector Pipeline</span></div>
+  <div className="pl-4">└── pyproject.toml</div>
+</div>

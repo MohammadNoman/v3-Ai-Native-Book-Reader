@@ -1,0 +1,32 @@
+## 1.1 The Death of Syntax
+
+The first realization of the AI-Native engineer is that syntax is cheap. In the past, a senior engineer was distinguished by their deep knowledge of obscure language features or memory management quirks. Today, an LLM can generate syntactically perfect code in seconds. Value has shifted upstream.
+
+Your role is no longer to be the typist; your role is to be the **Architect of Specifications**. If you can describe a system with perfect clarity (the Spec), the AI can build it.
+
+### 1.2 The Deterministic vs. Probabilistic Divide
+
+Software used to be purely deterministic: `if A then B`. AI introduces a probabilistic layer. A key challenge we will address is how to build reliable, production-grade systems on top of probabilistic engines.
+
+**Key Concept: The Sandwich Pattern**
+
+To tame the chaos, we use the Sandwich Pattern:
+
+<div className="bg-slate-800 p-4 rounded-lg my-4 border-l-4 border-blue-500 font-mono text-sm">
+  <div>1. Deterministic Input Validation (Pydantic/Zod)</div>
+  <div>2. Probabilistic AI Processing (LLM/Agent)</div>
+  <div>3. Deterministic Output Parsing (Structured Output)</div>
+</div>
+
+This pattern ensures that while the internal reasoning is flexible, the API contract remains rigid and reliable.
+
+## 1.3 Case Study: The Legacy Migration
+
+Consider 'CorpFin', a fictional fintech company. They spent 6 months rewriting a legacy Java module into Python manually. Using an AI-Native approach, we could have:
+
+1. Generated a functional spec from the Java code using an analysis agent.
+2. Refined the spec to remove technical debt.
+3. Generated the Python implementation from the clean spec.
+4. Generated unit tests to verify the behavior matches the spec.
+
+This reduces the cycle from months to weeks. This is the power we are unlocking.

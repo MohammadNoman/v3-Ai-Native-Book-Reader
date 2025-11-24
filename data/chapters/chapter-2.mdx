@@ -1,0 +1,40 @@
+## 2.1 The Spec is the Source of Truth
+
+In traditional Agile, documentation is an afterthought. In SDD, documentation is the *first* step. Before a single line of code is written, we write a **Technical Specification Document (TSD)**.
+
+### 2.2 Anatomy of a Perfect Spec
+
+An AI-ready spec must be: 
+- **Contextual**: It must define the 'Why' and 'Who'.
+- **Atomic**: Broken down into small, isolated components.
+- **Testable**: Must describe success criteria explicitly.
+
+<div className="bg-slate-900 p-6 rounded-lg my-6">
+  <h4 className="text-brand-400 font-bold mb-2">Example: User Authentication Spec</h4>
+  <pre className="text-xs text-slate-300 overflow-x-auto">
+{`# Component: AuthManager
+
+## Interface
+- input: email (str), password (str)
+- output: JWT (str) | Error
+
+## Constraints
+- Password strength: min 8 chars, 1 special, 1 number.
+- Hashing: Argon2id.
+- Token Expiry: 15 minutes.
+
+## Workflow
+1. Validate input format.
+2. Retrieve user hash from DB.
+3. Verify password.
+4. If valid, sign JWT with HS256.`}
+  </pre>
+</div>
+
+When you feed this spec to an LLM, the ambiguity is removed. The model doesn't need to guess which hashing algorithm to use; you told it.
+
+## 2.3 The Feedback Loop
+
+Spec-Driven Development is recursive. You write a draft spec -> Agent reviews it -> You refine it -> Agent generates code -> Agent generates tests -> Tests fail -> You update the SPEC (not just the code).
+
+Fixing the spec prevents the same bug from reappearing next time you regenerate the code. The Spec is your persistent memory.

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CHAPTERS } from './data/bookContent';
+import { CHAPTERS } from './data/chapters';
 import Sidebar from './components/Sidebar';
 import ChapterView from './components/ChapterView';
 import AIChat from './components/AIChat';
@@ -13,7 +13,7 @@ const App: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-slate-950 text-slate-200 font-sans selection:bg-brand-500/30 selection:text-brand-100">
-      <Sidebar 
+      <Sidebar
         chapters={CHAPTERS}
         activeChapterId={activeChapterId}
         onSelectChapter={setActiveChapterId}
@@ -25,7 +25,7 @@ const App: React.FC = () => {
         {/* Mobile Header */}
         <div className="md:hidden flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/80 backdrop-blur z-10 sticky top-0">
           <span className="font-bold text-slate-100 truncate pr-4">{activeChapter.title}</span>
-          <button 
+          <button
             onClick={() => setSidebarOpen(true)}
             className="p-2 text-slate-400 hover:text-white"
           >
@@ -37,7 +37,7 @@ const App: React.FC = () => {
         <main className="flex-1 overflow-y-auto scroll-smooth">
           <ChapterView chapter={activeChapter} />
         </main>
-        
+
         {/* AI Tutor Integration */}
         <AIChat activeChapter={activeChapter} />
       </div>

@@ -1,0 +1,48 @@
+## 3.1 The Modern AI Stack
+
+To build effective AI systems, we need a stack that handles vector data, massive context, and agentic orchestration.
+
+### 3.2 FastAPI: The Backbone
+
+We choose FastAPI for three reasons:
+1. **Async Native**: Essential for handling long-running LLM requests without blocking.
+2. **Pydantic Integration**: Native support for structured data, which is the lingua franca of AI Agents.
+3. **Auto-Docs**: OpenAPI generation is automatic, which allows other Agents to read and understand your API.
+
+### 3.3 Vector Databases (Qdrant)
+
+LLMs have a limited context window (though growing). We need long-term memory. Qdrant serves as our semantic knowledge base.
+
+**Workflow:**
+- Chunking: Split documents into 500-token segments.
+- Embedding: Convert text to vectors (text-embedding-004).
+- Indexing: Store in Qdrant.
+- Retrieval: Cosine similarity search.
+
+### 3.4 The Orchestrator (Agents SDK)
+
+We don't just write scripts; we build Agents. An Agent is: *Model + Tools + Instructions*.
+
+<div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
+  <h4 className="text-brand-400 font-bold mb-2">Code Snippet: Simple Agent Definition</h4>
+  <pre className="text-xs text-brand-100 font-mono overflow-x-auto">
+{`from google.genai import GoogleGenAI
+
+# Initialize Client
+ai = GoogleGenAI(api_key=process.env.API_KEY)
+
+# The "Agent" Logic
+async def run_agent(query: str):
+    response = await ai.models.generateContent({
+        "model": "gemini-2.5-flash",
+        "contents": query,
+        "config": {
+            "systemInstruction": "You are a DevOps expert...",
+            "tools": [{ "functionDeclarations": [deploy_tool] }]
+        }
+    })
+    return response`}
+  </pre>
+</div>
+
+In the next chapter, we will perform our first 'Hello World' of AI-Native development: generating a microservice entirely from a natural language prompt.
