@@ -240,5 +240,342 @@ async def run_agent(query: str):
       "Command: `npm run swizzle @docusaurus/theme-classic Root -- --wrap`",
       "This creates a wrapper component where we will place our `<AIChatProvider>` context."
     ]
+  },
+  {
+    id: "chapter-5",
+    title: "Chapter 5",
+    subtitle: "Building the RAG Brain (FastAPI + Qdrant)",
+    content: [
+      "## 5.1 System Architecture",
+      "Before we write code, we define the architecture. Our RAG (Retrieval-Augmented Generation) system consists of an ingestion pipeline to process our specs and a query engine to serve answers.",
+      <div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700 font-mono text-xs overflow-x-auto">
+{`+----------------+       +-------------------+       +--------------------+
+|  Doc Sources   | ----> | Ingestion Pipeline| ----> |  Qdrant Vector DB  |
+| (Markdown/MDX) |       | (Chunk -> Embed)  |       | (Semantic Index)   |
++----------------+       +-------------------+       +--------------------+
+                                                             ^
+                                                             | Retrieval
++----------------+       +-------------------+       +--------------------+
+|   Frontend     | <---> |   FastAPI App     | <---> |   Gemini 2.5 Agent |
+| (Chat Widget)  |       | (Agent Router)    |       | (Reasoning Engine) |
++----------------+       +-------------------+       +--------------------+`}
+      </div>,
+      "## 5.2 Dependency Management",
+      "We use `poetry` or `pip` to manage our Python environment. Create a `pyproject.toml` file:",
+      <div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
+        <h4 className="text-brand-400 font-bold mb-2">pyproject.toml</h4>
+        <pre className="text-xs text-slate-300 overflow-x-auto">
+{`[tool.poetry]
+name = "ai-native-rag"
+version = "0.1.0"
+description = "RAG Backend for Doc Platform"
+authors = ["AI Architect <arch@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.109.0"
+uvicorn = "^0.27.0"
+qdrant-client = "^1.7.0"
+google-genai = "^0.3.0"
+pydantic = "^2.6.0"
+python-dotenv = "^1.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"`}
+        </pre>
+      </div>,
+      "## 5.3 The Ingestion Pipeline",
+      "This script loads your Docusaurus Markdown files, splits them into semantic chunks, generates embeddings using `text-embedding-004`, and upserts them into Qdrant.",
+      <div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
+        <h4 className="text-brand-400 font-bold mb-2">src/ingest.py</h4>
+        <pre className="text-xs text-slate-300 overflow-x-auto">
+{`import os
+import glob
+from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, VectorParams, PointStruct
+from google.genai import GoogleGenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Configuration
+QDRANT_URL = os.getenv("QDRANT_URL")
+QDRANT_KEY = os.getenv("QDRANT_API_KEY")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+COLLECTION_NAME = "doc_specs"
+
+# Initialize Clients
+qdrant = QdrantClient(url=QDRANT_URL, api_key=QDRANT_KEY)
+ai = GoogleGenAI(api_key=GOOGLE_API_KEY)
+
+def init_db():
+    qdrant.recreate_collection(
+        collection_name=COLLECTION_NAME,
+        vectors_config=VectorParams(size=768, distance=Distance.COSINE),
+    )
+
+def embed_text(text: str):
+    result = ai.models.embed_content(
+        model="models/text-embedding-004",
+        content=text,
+        task_type="retrieval_document"
+    )
+    return result.embedding.values
+
+def ingest_docs(docs_path: str):
+    init_db()
+    files = glob.glob(f"{docs_path}/**/*.md", recursive=True)
+    points = []
+    idx = 0
+    
+    for file_path in files:
+        with open(file_path, "r") as f:
+            content = f.read()
+            # Simple chunking by header (naive approach)
+            chunks = content.split("## ")
+            
+            for chunk in chunks:
+                if len(chunk.strip()) < 50: continue
+                
+                vector = embed_text(chunk)
+                points.append(PointStruct(
+                    id=idx,
+                    vector=vector,
+                    payload={"source": file_path, "text": chunk[:1000]}
+                ))
+                idx += 1
+                
+                if len(points) >= 50:
+                    qdrant.upsert(collection_name=COLLECTION_NAME, points=points)
+                    points = []
+                    print(f"Indexed {idx} chunks...")
+                    
+    if points:
+        qdrant.upsert(collection_name=COLLECTION_NAME, points=points)
+
+if __name__ == "__main__":
+    ingest_docs("../docs")`}
+        </pre>
+      </div>,
+      "## 5.4 The Agent API (FastAPI)",
+      "This is the core brain. We expose an endpoint `/ask` that accepts a query and optional selected text context.",
+      <div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
+        <h4 className="text-brand-400 font-bold mb-2">src/main.py</h4>
+        <pre className="text-xs text-slate-300 overflow-x-auto">
+{`from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from qdrant_client import QdrantClient
+from google.genai import GoogleGenAI, types
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+app = FastAPI()
+ai = GoogleGenAI(api_key=os.getenv("GOOGLE_API_KEY"))
+qdrant = QdrantClient(
+    url=os.getenv("QDRANT_URL"), 
+    api_key=os.getenv("QDRANT_API_KEY")
+)
+COLLECTION_NAME = "doc_specs"
+
+# --- Tools ---
+def search_knowledge_base(query: str):
+    """Retrieves relevant documentation segments based on semantic query."""
+    embedding = ai.models.embed_content(
+        model="models/text-embedding-004",
+        content=query,
+        task_type="retrieval_query"
+    ).embedding.values
+    
+    hits = qdrant.search(
+        collection_name=COLLECTION_NAME,
+        query_vector=embedding,
+        limit=3
+    )
+    return "\\n".join([f"Source: {h.payload['source']}\\nContent: {h.payload['text']}" for h in hits])
+
+search_tool = types.Tool(
+    function_declarations=[
+        types.FunctionDeclaration(
+            name="search_knowledge_base",
+            description="Look up technical specifications and documentation.",
+            parameters=types.Schema(
+                type=types.Type.OBJECT,
+                properties={
+                    "query": types.Schema(type=types.Type.STRING)
+                },
+                required=["query"]
+            )
+        )
+    ]
+)
+
+# --- Endpoints ---
+class ChatRequest(BaseModel):
+    message: str
+    selected_context: str | None = None
+
+@app.post("/ask")
+async def ask_agent(req: ChatRequest):
+    system_instruction = "You are a Technical Assistant for an AI Platform. Use the search tool to find answers."
+    
+    if req.selected_context:
+        system_instruction += f"\\nThe user has highlighted this code/text: '{req.selected_context}'. Focus your answer on this context."
+    
+    # Generate content with tools
+    response = await ai.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=req.message,
+        config=types.GenerateContentConfig(
+            tools=[search_tool],
+            system_instruction=system_instruction
+        )
+    )
+    
+    # Handle Tool calls automatically (simplified for brevity)
+    # In production, you would loop through parts, execute function calls, and send function response back.
+    # For this snippet, we assume the model might return a tool call we need to handle or direct text.
+    
+    return {"reply": response.text or "I need to check the docs..."}
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}`}
+        </pre>
+      </div>
+    ]
+  },
+  {
+    id: "chapter-6",
+    title: "Chapter 6",
+    subtitle: "The Frontend Interface (React + Agents)",
+    content: [
+      "## 6.1 The Interface Challenge",
+      "We now have a brain, but it needs a body. We will build a 'ChatKit' compatible widget that floats on our documentation site. This widget handles state, history, and the connection to our FastAPI backend.",
+      "## 6.2 The React Widget Component",
+      "This component uses React hooks to manage the chat lifecycle. It also listens for text selection events on the parent document to implement 'Context-Aware' querying.",
+      <div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
+        <h4 className="text-brand-400 font-bold mb-2">src/components/ChatWidget.js</h4>
+        <pre className="text-xs text-slate-300 overflow-x-auto">
+{`import React, { useState, useEffect } from 'react';
+import { Send, MessageSquare, X } from 'lucide-react';
+
+export const ChatWidget = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [selection, setSelection] = useState('');
+
+  // Listen for text selection on the doc page
+  useEffect(() => {
+    const handleSelection = () => {
+      const text = window.getSelection().toString();
+      if (text.length > 5) setSelection(text);
+    };
+    document.addEventListener('mouseup', handleSelection);
+    return () => document.removeEventListener('mouseup', handleSelection);
+  }, []);
+
+  const sendMessage = async () => {
+    if (!input.trim()) return;
+    
+    const userMsg = { role: 'user', text: input };
+    setMessages(prev => [...prev, userMsg]);
+    setInput('');
+
+    try {
+      const res = await fetch('http://localhost:8000/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userMsg.text,
+          selected_context: selection // Send highlighted text as context
+        })
+      });
+      const data = await res.json();
+      setMessages(prev => [...prev, { role: 'model', text: data.reply }]);
+      setSelection(''); // Clear selection after use
+    } catch (e) {
+      setMessages(prev => [...prev, { role: 'error', text: "Failed to reach agent." }]);
+    }
+  };
+
+  if (!isOpen) {
+    return (
+      <button 
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-5 right-5 bg-blue-600 p-4 rounded-full text-white shadow-xl hover:scale-105 transition-transform"
+      >
+        <MessageSquare />
+      </button>
+    );
+  }
+
+  return (
+    <div className="fixed bottom-5 right-5 w-96 h-[500px] bg-white rounded-lg shadow-2xl flex flex-col border border-gray-200 z-50">
+      <div className="p-4 bg-slate-900 text-white rounded-t-lg flex justify-between items-center">
+        <span className="font-bold">Docs Assistant</span>
+        <button onClick={() => setIsOpen(false)}><X size={18} /></button>
+      </div>
+      
+      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        {messages.map((m, i) => (
+          <div key={i} className={\`p-3 rounded-lg text-sm \${
+            m.role === 'user' ? 'bg-blue-100 ml-8' : 'bg-gray-100 mr-8'
+          }\`}>
+            {m.text}
+          </div>
+        ))}
+      </div>
+
+      {selection && (
+        <div className="px-4 py-2 bg-yellow-50 text-xs border-t border-yellow-100 truncate">
+          <span className="font-bold">Context:</span> "{selection}"
+        </div>
+      )}
+
+      <div className="p-3 border-t flex gap-2">
+        <input 
+          className="flex-1 border rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && sendMessage()}
+          placeholder="Ask AI..."
+        />
+        <button onClick={sendMessage} className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
+          <Send size={18} />
+        </button>
+      </div>
+    </div>
+  );
+};`}
+        </pre>
+      </div>,
+      "## 6.3 Docusaurus Integration (Swizzling)",
+      "To make this widget appear on every page of our documentation site, we wrap the root application.",
+      "1. Run swizzle command: `npm run swizzle @docusaurus/theme-classic Root -- --wrap`",
+      "2. Edit `src/theme/Root.js`:",
+      <div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
+        <h4 className="text-brand-400 font-bold mb-2">src/theme/Root.js</h4>
+        <pre className="text-xs text-slate-300 overflow-x-auto">
+{`import React from 'react';
+import { ChatWidget } from '../components/ChatWidget';
+
+// Default implementation, that you can customize
+export default function Root({children}) {
+  return (
+    <>
+      {children}
+      <ChatWidget />
+    </>
+  );
+}`}
+        </pre>
+      </div>,
+      "## 6.4 The Result",
+      "You now have a documentation site that listens. Users can highlight a confusing paragraph about 'Authentication', click the chat bubble, and the Agent will explain it using the exact context of the paragraph plus the semantic knowledge from the entire vector database."
+    ]
   }
 ];
