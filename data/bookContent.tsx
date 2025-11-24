@@ -577,5 +577,189 @@ export default function Root({children}) {
       "## 6.4 The Result",
       "You now have a documentation site that listens. Users can highlight a confusing paragraph about 'Authentication', click the chat bubble, and the Agent will explain it using the exact context of the paragraph plus the semantic knowledge from the entire vector database."
     ]
+  },
+  {
+    id: "chapter-7",
+    title: "Chapter 7",
+    subtitle: "Advanced Intelligence: Subagents & Skills",
+    content: [
+      "## 7.1 The Subagent Revolution",
+      "Monolithic prompts are brittle. As complexity grows, a single system instruction becomes confused. The solution is **Subagents**.",
+      "In this chapter, we refactor our backend into a multi-agent system using a Hub-and-Spoke architecture.",
+      "### The Team",
+      "We will implement 4 specialized agents:",
+      "- **Router (The Boss)**: Analyzes intent and delegates tasks.",
+      "- **RAG Specialist**: Retrieves and synthesizes documentation.",
+      "- **Coder**: Generates production-ready snippets.",
+      "- **Summarizer**: Condenses long threads or documents.",
+      "- **Extractor**: Analyzes selected text context.",
+      "## 7.2 The Skill Registry",
+      "Skills are executable functions. We decouple them from agents to allow reuse.",
+      <div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
+        <h4 className="text-brand-400 font-bold mb-2">src/skills.py</h4>
+        <pre className="text-xs text-slate-300 overflow-x-auto">
+{`from google.genai import types
+
+class SkillRegistry:
+    def __init__(self):
+        self._skills = {}
+
+    def register(self, func, schema):
+        self._skills[func.__name__] = {
+            "impl": func,
+            "schema": schema
+        }
+    
+    def get_tool_declarations(self, tool_names):
+        return [
+            types.Tool(function_declarations=[self._skills[name]["schema"]])
+            for name in tool_names if name in self._skills
+        ]
+
+    def execute(self, tool_name, args):
+        if tool_name in self._skills:
+            return self._skills[tool_name]["impl"](**args)
+        raise ValueError(f"Skill {tool_name} not found")
+
+registry = SkillRegistry()`}
+        </pre>
+      </div>,
+      "## 7.3 Declarative Agent Specs (YAML)",
+      "We define agents in YAML to decouple configuration from logic. This is 'Spec-Driven' at the component level.",
+      <div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
+        <h4 className="text-brand-400 font-bold mb-2">config/agents.yaml</h4>
+        <pre className="text-xs text-slate-300 overflow-x-auto">
+{`agents:
+  rag_specialist:
+    model: "gemini-2.5-flash"
+    temperature: 0.2
+    system_instruction: >
+      You are a documentation expert. Use the search tool to find information.
+      Answer strictly based on retrieved context.
+    tools: ["search_knowledge_base"]
+
+  coder_specialist:
+    model: "gemini-2.5-flash"
+    temperature: 0.1
+    system_instruction: >
+      You are a senior Python engineer. Output ONLY valid code blocks.
+      Prefer Pydantic and FastAPI.
+    tools: []
+
+  summarizer:
+    model: "gemini-2.5-flash-lite"
+    temperature: 0.5
+    system_instruction: >
+      Summarize the given text into 3 bullet points.
+    tools: []
+
+  extractor:
+    model: "gemini-2.5-flash"
+    temperature: 0.0
+    system_instruction: >
+      Analyze the selected text context. Extract key entities (Function Names, Classes, API Routes).
+      Return them as a JSON list.
+    tools: []`}
+        </pre>
+      </div>,
+      "## 7.4 The Orchestrator",
+      "The Orchestrator (or Router) determines which subagent handles the user's request. We use a lightweight classification step.",
+      <div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
+        <h4 className="text-brand-400 font-bold mb-2">src/orchestrator.py</h4>
+        <pre className="text-xs text-slate-300 overflow-x-auto">
+{`import yaml
+from google.genai import GoogleGenAI
+from src.skills import registry
+
+class AgentSystem:
+    def __init__(self):
+        with open("config/agents.yaml") as f:
+            self.config = yaml.safe_load(f)["agents"]
+        self.ai = GoogleGenAI(api_key=process.env.API_KEY)
+
+    async def route_request(self, user_query: str, has_context: bool):
+        # 1. Classification Step
+        router_prompt = f"""
+        Classify the following query into one of these categories:
+        - RAG: Questions about documentation, specs, or concepts.
+        - CODE: Requests to write, debug, or explain code.
+        - SUMMARIZE: Requests to shorten text.
+        - EXTRACT: Requests to analyze specific highlighted text.
+        - CHAT: General pleasantries.
+        
+        Query: {user_query}
+        Has Selection Context: {has_context}
+        
+        Return ONLY the category name.
+        """
+        
+        res = await self.ai.models.generate_content(
+            model="gemini-2.5-flash-lite", 
+            contents=router_prompt
+        )
+        intent = res.text.strip().upper()
+        
+        # 2. Delegation
+        if intent == "RAG":
+            return await self.run_agent("rag_specialist", user_query)
+        elif intent == "CODE":
+            return await self.run_agent("coder_specialist", user_query)
+        elif intent == "SUMMARIZE":
+            return await self.run_agent("summarizer", user_query)
+        elif intent == "EXTRACT" and has_context:
+            return await self.run_agent("extractor", user_query)
+        else:
+            # Fallback to general chat
+            return await self.run_agent("rag_specialist", user_query)
+
+    async def run_agent(self, agent_name, query):
+        cfg = self.config[agent_name]
+        
+        # Hydrate tools from registry
+        tools_config = []
+        if cfg["tools"]:
+            tools_config = registry.get_tool_declarations(cfg["tools"])
+
+        response = await self.ai.models.generate_content(
+            model=cfg["model"],
+            contents=query,
+            config={
+                "systemInstruction": cfg["system_instruction"],
+                "tools": tools_config,
+                "temperature": cfg.get("temperature", 0.7)
+            }
+        )
+        return response`}
+        </pre>
+      </div>,
+      "## 7.5 FastAPI Integration",
+      "Finally, we update `main.py` to use our new `AgentSystem`.",
+      <div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
+        <h4 className="text-brand-400 font-bold mb-2">src/main.py (Updated)</h4>
+        <pre className="text-xs text-slate-300 overflow-x-auto">
+{`from src.orchestrator import AgentSystem
+
+agent_system = AgentSystem()
+
+@app.post("/ask")
+async def ask_agent(req: ChatRequest):
+    # The orchestrator handles routing and tool execution
+    has_context = req.selected_context is not None
+    
+    # Pre-pend context to message if it exists, or handle in agent
+    final_query = req.message
+    if has_context:
+        final_query = f"Context: {req.selected_context}\\nQuery: {req.message}"
+
+    response = await agent_system.route_request(final_query, has_context)
+    return {"reply": response.text}`}
+        </pre>
+      </div>,
+      "## 7.6 How This Wins Hackathons",
+      "1. **Architecture Slide**: You can show a complex multi-agent diagram instead of a single box.",
+      "2. **Reliability**: A 'Coder' agent with `temperature=0.1` writes better code than a generic bot with `temperature=0.7`.",
+      "3. **Scalability**: Judges love seeing that you can easily add a 'SQL Agent' or 'Graph Agent' just by adding a YAML entry.",
+      "4. **Full-Stack Logic**: Integrating 'Selection Context' from React all the way to a specialized 'Extractor' subagent demonstrates true full-stack mastery."
+    ]
   }
 ];
