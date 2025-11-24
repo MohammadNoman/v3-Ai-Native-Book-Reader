@@ -761,5 +761,98 @@ async def ask_agent(req: ChatRequest):
       "3. **Scalability**: Judges love seeing that you can easily add a 'SQL Agent' or 'Graph Agent' just by adding a YAML entry.",
       "4. **Full-Stack Logic**: Integrating 'Selection Context' from React all the way to a specialized 'Extractor' subagent demonstrates true full-stack mastery."
     ]
+  },
+  {
+    id: "appendix-readme",
+    title: "Appendix",
+    subtitle: "Project README & Deployment",
+    content: [
+      "# AI-Native & Spec-Driven Software Platform",
+      "**From Zero to Production with Docusaurus, FastAPI, Qdrant, and Gemini Agents.**",
+      "## 1. Overview",
+      "This repository contains the complete source code for a production-grade documentation platform powered by an autonomous multi-agent system. It demonstrates the **Spec-Driven Development** methodology, where AI agents are orchestrated to read documentation, answer queries, and generate code based on rigid specifications.",
+      "## 2. Architecture",
+      <div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700 font-mono text-xs overflow-x-auto">
+{`[User Browser]
+      |
+      v
+[Docusaurus SPA] <-----> [FastAPI Backend]
+(React + ChatKit)               |
+                                v
+                       [Agent Orchestrator]
+                       /        |         \\
+                 [RAG Agent] [Coder Agent] [Summary Agent]
+                      |
+                      v
+              [Qdrant Vector DB]
+`}
+      </div>,
+      "## 3. Directory Structure",
+      <div className="bg-slate-900 p-4 rounded-lg my-4 font-mono text-xs text-brand-100">
+        <div>.</div>
+        <div>├── docs/ <span className="text-slate-500"># Markdown Documentation Source</span></div>
+        <div>├── backend/</div>
+        <div className="pl-4">├── src/</div>
+        <div className="pl-8">├── main.py <span className="text-slate-500"># FastAPI Entrypoint</span></div>
+        <div className="pl-8">├── orchestrator.py <span className="text-slate-500"># Agent Router</span></div>
+        <div className="pl-8">├── skills.py <span className="text-slate-500"># Tool Registry</span></div>
+        <div className="pl-8">└── ingest.py <span className="text-slate-500"># Vector Pipeline</span></div>
+        <div className="pl-4">└── pyproject.toml</div>
+        <div>├── frontend/ <span className="text-slate-500"># Docusaurus Project</span></div>
+        <div className="pl-4">├── src/components/ChatWidget.js</div>
+        <div className="pl-4">└── docusaurus.config.js</div>
+      </div>,
+      "## 4. Setup Instructions",
+      "### Prerequisites",
+      "- Node.js 18+",
+      "- Python 3.10+",
+      "- Qdrant Cloud Cluster (Free Tier)",
+      "- Google GenAI API Key",
+      "### Step 1: Backend Setup",
+      <div className="bg-slate-800 p-4 rounded-lg my-4 font-mono text-sm">
+        <div className="text-slate-400"># 1. Install Dependencies</div>
+        <div className="text-white">cd backend && poetry install</div>
+        <div className="h-2"></div>
+        <div className="text-slate-400"># 2. Configure Environment</div>
+        <div className="text-white">cp .env.example .env</div>
+        <div className="text-slate-500 text-xs mt-1"># Fill in GOOGLE_API_KEY, QDRANT_URL, QDRANT_API_KEY</div>
+        <div className="h-2"></div>
+        <div className="text-slate-400"># 3. Ingest Documentation</div>
+        <div className="text-white">poetry run python src/ingest.py</div>
+        <div className="h-2"></div>
+        <div className="text-slate-400"># 4. Start Server</div>
+        <div className="text-white">poetry run uvicorn src.main:app --reload</div>
+      </div>,
+      "### Step 2: Frontend Setup",
+      <div className="bg-slate-800 p-4 rounded-lg my-4 font-mono text-sm">
+        <div className="text-slate-400"># 1. Install Dependencies</div>
+        <div className="text-white">cd frontend && npm install</div>
+        <div className="h-2"></div>
+        <div className="text-slate-400"># 2. Start Docusaurus</div>
+        <div className="text-white">npm start</div>
+      </div>,
+      "## 5. Deployment Guide",
+      "### Frontend (GitHub Pages)",
+      "1. Update `docusaurus.config.js` with your repo URL.",
+      "2. Run deployment command:",
+      "`GIT_USER=yourname npm run deploy`",
+      "### Backend (Render.com)",
+      "1. Create a new **Web Service** on Render.",
+      "2. Connect your GitHub repo.",
+      "3. Set Build Command: `pip install poetry && poetry install`.",
+      "4. Set Start Command: `poetry run uvicorn src.main:app --host 0.0.0.0 --port $PORT`.",
+      "5. Add Environment Variables in the Render Dashboard.",
+      "## 6. Hackathon Demo Workflow",
+      "**Scene 1: The Problem**",
+      "Show the documentation site. Highlight a complex section about 'Auth flow'. Mention how hard it is to find the exact hashing algorithm details.",
+      "**Scene 2: Context Awareness**",
+      "Highlight the text 'Argon2id hashing'. Click the floating Chat Bubble. The AI immediately greets you with context: *'I see you are asking about Argon2id...'*.",
+      "**Scene 3: RAG in Action**",
+      "Ask: *'How do I implement this in Python?'*. The 'Coder' subagent activates (show backend logs if possible) and generates a perfect Pydantic model.",
+      "**Scene 4: The Spec**",
+      "Show the `agents.yaml` file. Explain that this entire intelligence system is defined in a declarative YAML spec, not hardcoded if/else statements.",
+      "## 7. Credits",
+      "Built with ❤️ using **Gemini 2.5**, **Qdrant**, and **Docusaurus**."
+    ]
   }
 ];
