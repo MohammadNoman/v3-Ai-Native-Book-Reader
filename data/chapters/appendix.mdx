@@ -1,40 +1,155 @@
-# 🚀 AI-Native Speedrun 🚀
-## AI-Native & Spec-Driven Software Platform
+<div className="space-y-10">
 
-**From Zero to Production with Docusaurus, FastAPI, Qdrant, and Gemini Agents.**
-
-## 1. Overview
-
-This repository contains the complete source code for a production-grade documentation platform powered by an autonomous multi-agent system. It demonstrates the **Spec-Driven Development** methodology, where AI agents are orchestrated to read documentation, answer queries, and generate code based on rigid specifications.
-
-## 2. Architecture
-
-<div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700 font-mono text-xs overflow-x-auto">
-{`[User Browser]
-      |
-      v
-[Docusaurus SPA] <-----> [FastAPI Backend]
-(React + ChatKit)               |
-                                v
-                       [Agent Orchestrator]
-                       /        |         \\
-                 [RAG Agent] [Coder Agent] [Summary Agent]
-                      |
-                      v
-              [Qdrant Vector DB]
-`}
+{/* Hero Section */}
+<div className="text-center py-8">
+  <div className="inline-block mb-6">
+    <div className="w-20 h-1 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 rounded-full mx-auto mb-6"></div>
+  </div>
+  
+  <h1 className="text-5xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent leading-tight">
+    🚀 AI-Native Speedrun 🚀
+  </h1>
+  
+  <p className="text-2xl font-bold text-white mb-4">AI-Native & Spec-Driven Software Platform</p>
+  <p className="text-xl text-slate-400">From Zero to Production with Docusaurus, FastAPI, Qdrant, and Gemini Agents</p>
 </div>
 
-## 3. Directory Structure
+{/* Overview */}
+<div>
+  <h2 className="text-4xl font-bold text-white mb-6 flex items-center gap-3">
+    <span className="text-4xl">📖</span>
+    1. Overview
+  </h2>
+  
+  <div className="bg-gradient-to-br from-blue-950 via-slate-900 to-purple-950 rounded-2xl p-8 border border-blue-800/30 shadow-xl">
+    <p className="text-xl text-slate-200 leading-relaxed">
+      This repository contains the complete source code for a <strong className="text-cyan-400">production-grade documentation platform</strong> powered by an autonomous multi-agent system.
+    </p>
+    
+    <div className="mt-6 p-6 bg-slate-900/50 rounded-lg border border-slate-700">
+      <p className="text-lg text-white font-bold mb-2">Demonstrates:</p>
+      <p className="text-slate-300">
+        <strong className="text-purple-400">Spec-Driven Development</strong> methodology, where AI agents are orchestrated to read documentation, answer queries, and generate code based on rigid specifications.
+      </p>
+    </div>
+  </div>
+</div>
 
-<div className="bg-slate-900 p-4 rounded-lg my-4 font-mono text-xs text-brand-100">
-  <div>.</div>
-  <div>├── docs/ <span className="text-slate-500"># Markdown Documentation Source</span></div>
-  <div>├── backend/</div>
-  <div className="pl-4">├── src/</div>
-  <div className="pl-8">├── main.py <span className="text-slate-500"># FastAPI Entrypoint</span></div>
-  <div className="pl-8">├── orchestrator.py <span className="text-slate-500"># Agent Router</span></div>
-  <div className="pl-8">├── skills.py <span className="text-slate-500"># Tool Registry</span></div>
-  <div className="pl-8">├── ingest.py <span className="text-slate-500"># Vector Pipeline</span></div>
-  <div className="pl-4">└── pyproject.toml</div>
+{/* Architecture */}
+<div>
+  <h2 className="text-4xl font-bold text-white mb-6 flex items-center gap-3">
+    <span className="text-4xl">🏗️</span>
+    2. Architecture
+  </h2>
+  
+  <div className="bg-slate-900 rounded-2xl p-8 border border-slate-700 shadow-xl">
+    <div className="grid md:grid-cols-2 gap-6">
+      {/* Frontend */}
+      <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-xl p-6 border border-cyan-500/30">
+        <div className="text-3xl mb-3">💻</div>
+        <h4 className="text-xl font-bold text-white mb-3">Frontend Layer</h4>
+        <div className="space-y-2">
+          <p className="text-slate-300"><span className="text-cyan-400">•</span> Docusaurus SPA</p>
+          <p className="text-slate-300"><span className="text-cyan-400">•</span> React + ChatKit</p>
+          <p className="text-slate-300"><span className="text-cyan-400">•</span> User Browser Interface</p>
+        </div>
+      </div>
+      
+      {/* Backend */}
+      <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl p-6 border border-purple-500/30">
+        <div className="text-3xl mb-3">⚡</div>
+        <h4 className="text-xl font-bold text-white mb-3">Backend Layer</h4>
+        <div className="space-y-2">
+          <p className="text-slate-300"><span className="text-purple-400">•</span> FastAPI Backend</p>
+          <p className="text-slate-300"><span className="text-purple-400">•</span> Agent Orchestrator</p>
+          <p className="text-slate-300"><span className="text-purple-400">•</span> Qdrant Vector DB</p>
+        </div>
+      </div>
+    </div>
+    
+    {/* Agents */}
+    <div className="mt-6 grid md:grid-cols-3 gap-4">
+      <div className="bg-slate-950 rounded-lg p-4 border border-slate-800">
+        <div className="text-2xl mb-2">🔍</div>
+        <p className="font-bold text-white">RAG Agent</p>
+        <p className="text-slate-400 text-sm">Documentation retrieval</p>
+      </div>
+      
+      <div className="bg-slate-950 rounded-lg p-4 border border-slate-800">
+        <div className="text-2xl mb-2">💻</div>
+        <p className="font-bold text-white">Coder Agent</p>
+        <p className="text-slate-400 text-sm">Code generation</p>
+      </div>
+      
+      <div className="bg-slate-950 rounded-lg p-4 border border-slate-800">
+        <div className="text-2xl mb-2">📝</div>
+        <p className="font-bold text-white">Summary Agent</p>
+        <p className="text-slate-400 text-sm">Content summarization</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{/* Directory Structure */}
+<div>
+  <h2 className="text-4xl font-bold text-white mb-6 flex items-center gap-3">
+    <span className="text-4xl">📁</span>
+    3. Directory Structure
+  </h2>
+  
+  <div className="bg-slate-900 rounded-2xl p-6 border border-slate-700 shadow-xl">
+    <div className="bg-slate-950 rounded-lg p-6 border border-slate-800 font-mono text-sm">
+      <div className="space-y-1 text-slate-300">
+        <div className="text-cyan-400">.</div>
+        <div className="pl-4">├── <span className="text-blue-400">docs/</span> <span className="text-slate-500"># Markdown Documentation Source</span></div>
+        <div className="pl-4">├── <span className="text-purple-400">backend/</span></div>
+        <div className="pl-8">├── src/</div>
+        <div className="pl-12">├── <span className="text-green-400">main.py</span> <span className="text-slate-500"># FastAPI Entrypoint</span></div>
+        <div className="pl-12">├── <span className="text-green-400">orchestrator.py</span> <span className="text-slate-500"># Agent Router</span></div>
+        <div className="pl-12">├── <span className="text-green-400">skills.py</span> <span className="text-slate-500"># Tool Registry</span></div>
+        <div className="pl-12">└── <span className="text-green-400">ingest.py</span> <span className="text-slate-500"># Vector Pipeline</span></div>
+        <div className="pl-8">└── pyproject.toml</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{/* Quick Start */}
+<div>
+  <h2 className="text-4xl font-bold text-white mb-6 flex items-center gap-3">
+    <span className="text-4xl">⚡</span>
+    4. Quick Start
+  </h2>
+  
+  <div className="grid md:grid-cols-2 gap-6">
+    <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl p-6 border border-green-500/30">
+      <div className="text-3xl mb-3">📚</div>
+      <h4 className="text-xl font-bold text-white mb-3">Frontend Setup</h4>
+      <div className="bg-slate-900/50 rounded-lg p-4 border border-slate-700 font-mono text-sm space-y-2">
+        <p className="text-green-400">npm install</p>
+        <p className="text-green-400">npm start</p>
+      </div>
+    </div>
+    
+    <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-xl p-6 border border-blue-500/30">
+      <div className="text-3xl mb-3">⚙️</div>
+      <h4 className="text-xl font-bold text-white mb-3">Backend Setup</h4>
+      <div className="bg-slate-900/50 rounded-lg p-4 border border-slate-700 font-mono text-sm space-y-2">
+        <p className="text-cyan-400">poetry install</p>
+        <p className="text-cyan-400">uvicorn src.main:app</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{/* Footer */}
+<div className="text-center py-8">
+  <div className="inline-block bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl px-12 py-6 border border-cyan-500/30">
+    <p className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+      Ready to Build the Future? 🚀
+    </p>
+    <p className="text-slate-300">Follow the chapters to learn the complete implementation!</p>
+  </div>
+</div>
+
 </div>

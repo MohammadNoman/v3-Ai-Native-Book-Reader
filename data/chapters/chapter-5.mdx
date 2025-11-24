@@ -1,32 +1,88 @@
-## 5.1 System Architecture
+<div className="space-y-10">
 
-Before we write code, we define the architecture. Our RAG (Retrieval-Augmented Generation) system consists of an ingestion pipeline to process our specs and a query engine to serve answers.
-
-<div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700 font-mono text-xs overflow-x-auto">
-{`+----------------+       +-------------------+       +--------------------+
-|  Doc Sources   | ----> | Ingestion Pipeline| ----> |  Qdrant Vector DB  |
-| (Markdown/MDX) |       | (Chunk -> Embed)  |       | (Semantic Index)   |
-+----------------+       +-------------------+       +--------------------+
-                                                             ^
-                                                             | Retrieval
-+----------------+       +-------------------+       +--------------------+
-|   Frontend     | <---> |   FastAPI App     | <---> |   Gemini 2.5 Agent |
-| (Chat Widget)  |       | (Agent Router)    |       | (Reasoning Engine) |
-+----------------+       +-------------------+       +--------------------+`}
+{/* Section 5.1 - Architecture */}
+<div>
+  <h2 className="text-4xl font-bold text-white mb-6 flex items-center gap-3">
+    <span className="text-4xl">🧠</span>
+    5.1 System Architecture
+  </h2>
+  
+  <p className="text-lg text-slate-300 mb-6 leading-relaxed">
+    Before we write code, we define the architecture. Our <strong className="text-cyan-400">RAG (Retrieval-Augmented Generation)</strong> system consists of an ingestion pipeline and a query engine.
+  </p>
+  
+  <div className="bg-slate-900 rounded-2xl p-8 border border-slate-700 shadow-xl">
+    <div className="flex items-center gap-3 mb-6">
+      <span className="text-2xl">📐</span>
+      <h4 className="text-xl font-bold text-cyan-400">RAG System Flow</h4>
+    </div>
+    
+    <div className="grid md:grid-cols-3 gap-4 mb-6">
+      <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-xl p-6 border border-blue-500/30">
+        <div className="text-3xl mb-3">📄</div>
+        <h4 className="text-lg font-bold text-white mb-2">1. Doc Sources</h4>
+        <p className="text-slate-300 text-sm">Markdown/MDX files</p>
+      </div>
+      
+      <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl p-6 border border-purple-500/30">
+        <div className="text-3xl mb-3">⚙️</div>
+        <h4 className="text-lg font-bold text-white mb-2">2. Ingestion</h4>
+        <p className="text-slate-300 text-sm">Chunk → Embed</p>
+      </div>
+      
+      <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl p-6 border border-green-500/30">
+        <div className="text-3xl mb-3">🔍</div>
+        <h4 className="text-lg font-bold text-white mb-2">3. Vector DB</h4>
+        <p className="text-slate-300 text-sm">Qdrant Semantic Index</p>
+      </div>
+    </div>
+    
+    <div className="bg-slate-950 rounded-lg p-6 border border-slate-800 mt-6">
+      <div className="grid md:grid-cols-3 gap-4">
+        <div className="text-center">
+          <div className="text-2xl mb-2">💬</div>
+          <p className="text-white font-bold">Frontend</p>
+          <p className="text-slate-400 text-sm">Chat Widget</p>
+        </div>
+        
+        <div className="text-center">
+          <div className="text-2xl mb-2">⚡</div>
+          <p className="text-white font-bold">FastAPI</p>
+          <p className="text-slate-400 text-sm">Agent Router</p>
+        </div>
+        
+        <div className="text-center">
+          <div className="text-2xl mb-2">🤖</div>
+          <p className="text-white font-bold">Gemini 2.5</p>
+          <p className="text-slate-400 text-sm">Reasoning Engine</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-## 5.2 Dependency Management
-
-We use `poetry` or `pip` to manage our Python environment. Create a `pyproject.toml` file:
-
-<div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
-  <h4 className="text-brand-400 font-bold mb-2">pyproject.toml</h4>
-  <pre className="text-xs text-slate-300 overflow-x-auto">
-{`[tool.poetry]
+{/* Section 5.2 - Dependencies */}
+<div>
+  <h2 className="text-4xl font-bold text-white mb-6 flex items-center gap-3">
+    <span className="text-4xl">📦</span>
+    5.2 Dependency Management
+  </h2>
+  
+  <p className="text-lg text-slate-300 mb-6 leading-relaxed">
+    We use <code className="text-cyan-400 bg-slate-900 px-2 py-1 rounded">poetry</code> or <code className="text-cyan-400 bg-slate-900 px-2 py-1 rounded">pip</code> to manage our Python environment.
+  </p>
+  
+  <div className="bg-slate-900 rounded-2xl p-6 border border-slate-700 shadow-xl">
+    <div className="flex items-center gap-3 mb-4">
+      <span className="text-2xl">📝</span>
+      <h4 className="text-lg font-bold text-cyan-400">pyproject.toml</h4>
+    </div>
+    
+    <div className="bg-slate-950 rounded-lg p-6 border border-slate-800 font-mono text-xs overflow-x-auto">
+      <pre className="text-slate-300">{`[tool.poetry]
 name = "ai-native-rag"
 version = "0.1.0"
 description = "RAG Backend for Doc Platform"
-authors = ["AI Architect <arch@example.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -35,45 +91,50 @@ uvicorn = "^0.27.0"
 qdrant-client = "^1.7.0"
 google-genai = "^0.3.0"
 pydantic = "^2.6.0"
-python-dotenv = "^1.0.0"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"`}
-  </pre>
+python-dotenv = "^1.0.0"`}</pre>
+    </div>
+  </div>
 </div>
 
-## 5.3 The Ingestion Pipeline
-
-This script loads your Docusaurus Markdown files, splits them into semantic chunks, generates embeddings using `text-embedding-004`, and upserts them into Qdrant.
-
-<div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
-  <h4 className="text-brand-400 font-bold mb-2">src/ingest.py</h4>
-  <pre className="text-xs text-slate-300 overflow-x-auto">
-{`import os
-import glob
-from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct
+{/* Section 5.3 - Ingestion */}
+<div>
+  <h2 className="text-4xl font-bold text-white mb-6 flex items-center gap-3">
+    <span className="text-4xl">🔄</span>
+    5.3 The Ingestion Pipeline
+  </h2>
+  
+  <p className="text-lg text-slate-300 mb-6 leading-relaxed">
+    This script loads your Docusaurus Markdown files, splits them into semantic chunks, generates embeddings, and upserts them into Qdrant.
+  </p>
+  
+  <div className="grid md:grid-cols-4 gap-3 mb-6">
+    <div className="bg-blue-500/10 border-l-4 border-blue-500 rounded-r-lg p-4">
+      <p className="font-bold text-blue-400">1. Load Docs</p>
+    </div>
+    <div className="bg-purple-500/10 border-l-4 border-purple-500 rounded-r-lg p-4">
+      <p className="font-bold text-purple-400">2. Chunk Text</p>
+    </div>
+    <div className="bg-cyan-500/10 border-l-4 border-cyan-500 rounded-r-lg p-4">
+      <p className="font-bold text-cyan-400">3. Embed</p>
+    </div>
+    <div className="bg-green-500/10 border-l-4 border-green-500 rounded-r-lg p-4">
+      <p className="font-bold text-green-400">4. Index</p>
+    </div>
+  </div>
+  
+  <div className="bg-slate-900 rounded-2xl p-6 border border-slate-700 shadow-xl">
+    <div className="flex items-center gap-3 mb-4">
+      <span className="text-2xl">💻</span>
+      <h4 className="text-lg font-bold text-cyan-400">src/ingest.py</h4>
+    </div>
+    
+    <div className="bg-slate-950 rounded-lg p-6 border border-slate-800 font-mono text-xs overflow-x-auto">
+      <pre className="text-slate-300">{`from qdrant_client import QdrantClient
 from google.genai import GoogleGenAI
-from dotenv import load_dotenv
-
-load_dotenv()
-
-# Configuration
-QDRANT_URL = os.getenv("QDRANT_URL")
-QDRANT_KEY = os.getenv("QDRANT_API_KEY")
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-COLLECTION_NAME = "doc_specs"
 
 # Initialize Clients
 qdrant = QdrantClient(url=QDRANT_URL, api_key=QDRANT_KEY)
 ai = GoogleGenAI(api_key=GOOGLE_API_KEY)
-
-def init_db():
-    qdrant.recreate_collection(
-        collection_name=COLLECTION_NAME,
-        vectors_config=VectorParams(size=768, distance=Distance.COSINE),
-    )
 
 def embed_text(text: str):
     result = ai.models.embed_content(
@@ -84,72 +145,79 @@ def embed_text(text: str):
     return result.embedding.values
 
 def ingest_docs(docs_path: str):
-    init_db()
     files = glob.glob(f"{docs_path}/**/*.md", recursive=True)
-    points = []
-    idx = 0
     
     for file_path in files:
-        with open(file_path, "r") as f:
-            content = f.read()
-            # Simple chunking by header (naive approach)
-            chunks = content.split("## ")
-            
-            for chunk in chunks:
-                if len(chunk.strip()) < 50: continue
-                
-                vector = embed_text(chunk)
-                points.append(PointStruct(
-                    id=idx,
-                    vector=vector,
-                    payload={"source": file_path, "text": chunk[:1000]}
-                ))
-                idx += 1
-                
-                if len(points) >= 50:
-                    qdrant.upsert(collection_name=COLLECTION_NAME, points=points)
-                    points = []
-                    print(f"Indexed {idx} chunks...")
-                    
-    if points:
-        qdrant.upsert(collection_name=COLLECTION_NAME, points=points)
-
-if __name__ == "__main__":
-    ingest_docs("../docs")`}
-  </pre>
+        chunks = content.split("## ")
+        for chunk in chunks:
+            vector = embed_text(chunk)
+            qdrant.upsert(collection_name=COLLECTION_NAME, points=[...])
+`}</pre>
+    </div>
+  </div>
 </div>
 
-## 5.4 The Agent API (FastAPI)
-
-This is the core brain. We expose an endpoint `/ask` that accepts a query and optional selected text context.
-
-<div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
-  <h4 className="text-brand-400 font-bold mb-2">src/main.py</h4>
-  <pre className="text-xs text-slate-300 overflow-x-auto">
-{`from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from qdrant_client import QdrantClient
-from google.genai import GoogleGenAI, types
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-app = FastAPI()
-ai = GoogleGenAI(api_key=os.getenv("GOOGLE_API_KEY"))
-qdrant = QdrantClient(
-    url=os.getenv("QDRANT_URL"), 
-    api_key=os.getenv("QDRANT_API_KEY")
-)
-COLLECTION_NAME = "doc_specs"
-
-# --- Tools ---
-def search_knowledge_base(query: str):
-    """Retrieves relevant documentation segments based on semantic query."""
+{/* Section 5.4 - Agent API */}
+<div>
+  <h2 className="text-4xl font-bold text-white mb-6 flex items-center gap-3">
+    <span className="text-4xl">🚀</span>
+    5.4 The Agent API (FastAPI)
+  </h2>
+  
+  <p className="text-lg text-slate-300 mb-6 leading-relaxed">
+    This is the <strong className="text-cyan-400">core brain</strong>. We expose an endpoint <code className="text-purple-400 bg-slate-900 px-2 py-1 rounded">/ask</code> that accepts a query and optional context.
+  </p>
+  
+  <div className="bg-gradient-to-br from-purple-950 via-slate-900 to-blue-950 rounded-2xl p-8 border border-purple-800/30 shadow-xl mb-6">
+    <h4 className="text-xl font-bold text-white mb-4">Key Features</h4>
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="flex items-start gap-3">
+        <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">✓</div>
+        <div>
+          <p className="font-bold text-white">Semantic Search</p>
+          <p className="text-slate-400 text-sm">Vector similarity in Qdrant</p>
+        </div>
+      </div>
+      
+      <div className="flex items-start gap-3">
+        <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">✓</div>
+        <div>
+          <p className="font-bold text-white">Context-Aware</p>
+          <p className="text-slate-400 text-sm">Handles selected text</p>
+        </div>
+      </div>
+      
+      <div className="flex items-start gap-3">
+        <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">✓</div>
+        <div>
+          <p className="font-bold text-white">Tool Integration</p>
+          <p className="text-slate-400 text-sm">Function calling support</p>
+        </div>
+      </div>
+      
+      <div className="flex items-start gap-3">
+        <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">✓</div>
+        <div>
+          <p className="font-bold text-white">Async Native</p>
+          <p className="text-slate-400 text-sm">Non-blocking operations</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div className="bg-slate-900 rounded-2xl p-6 border border-slate-700 shadow-xl">
+    <div className="flex items-center gap-3 mb-4">
+      <span className="text-2xl">💻</span>
+      <h4 className="text-lg font-bold text-cyan-400">src/main.py</h4>
+    </div>
+    
+    <div className="bg-slate-950 rounded-lg p-6 border border-slate-800 font-mono text-xs overflow-x-auto">
+      <pre className="text-slate-300">{`@app.post("/ask")
+async def ask_agent(req: ChatRequest):
+    # Retrieve relevant docs
     embedding = ai.models.embed_content(
         model="models/text-embedding-004",
-        content=query,
-        task_type="retrieval_query"
+        content=req.message
     ).embedding.values
     
     hits = qdrant.search(
@@ -157,54 +225,20 @@ def search_knowledge_base(query: str):
         query_vector=embedding,
         limit=3
     )
-    return "\\n".join([f"Source: {h.payload['source']}\\nContent: {h.payload['text']}" for h in hits])
-
-search_tool = types.Tool(
-    function_declarations=[
-        types.FunctionDeclaration(
-            name="search_knowledge_base",
-            description="Look up technical specifications and documentation.",
-            parameters=types.Schema(
-                type=types.Type.OBJECT,
-                properties={
-                    "query": types.Schema(type=types.Type.STRING)
-                },
-                required=["query"]
-            )
-        )
-    ]
-)
-
-# --- Endpoints ---
-class ChatRequest(BaseModel):
-    message: str
-    selected_context: str | None = None
-
-@app.post("/ask")
-async def ask_agent(req: ChatRequest):
-    system_instruction = "You are a Technical Assistant for an AI Platform. Use the search tool to find answers."
     
-    if req.selected_context:
-        system_instruction += f"\\nThe user has highlighted this code/text: '{req.selected_context}'. Focus your answer on this context."
-    
-    # Generate content with tools
+    # Generate response with context
     response = await ai.models.generate_content(
         model="gemini-2.5-flash",
         contents=req.message,
         config=types.GenerateContentConfig(
             tools=[search_tool],
-            system_instruction=system_instruction
+            system_instruction="Use docs to answer..."
         )
     )
     
-    # Handle Tool calls automatically (simplified for brevity)
-    # In production, you would loop through parts, execute function calls, and send function response back.
-    # For this snippet, we assume the model might return a tool call we need to handle or direct text.
-    
-    return {"reply": response.text or "I need to check the docs..."}
+    return {"reply": response.text}`}</pre>
+    </div>
+  </div>
+</div>
 
-@app.get("/health")
-def health():
-    return {"status": "ok"}`}
-  </pre>
 </div>

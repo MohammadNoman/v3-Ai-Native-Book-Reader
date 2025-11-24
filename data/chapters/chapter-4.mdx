@@ -1,67 +1,128 @@
-## 4.1 Why Docusaurus?
+<div className="space-y-10">
 
-In Spec-Driven Development, the specification is a living document. It needs to be versioned, searchable, and accessible. We choose **Docusaurus** because it supports MDX (React in Markdown), allowing us to embed interactive AI widgets directly into our specs.
-
-## 4.2 Project Structure
-
-We will scaffold the project to separate static documentation from our dynamic AI application logic. This structure ensures clean separation of concerns.
-
-<div className="bg-slate-900 p-4 rounded-lg my-4 font-mono text-xs text-brand-100 border border-slate-800">
-  <div>my-ai-platform/</div>
-  <div className="pl-4">├── docs/ <span className="text-slate-500"># The Source of Truth (Specs & Guides)</span></div>
-  <div className="pl-8">├── architecture/ <span className="text-slate-600"># High-level design</span></div>
-  <div className="pl-8">├── specs/ <span className="text-slate-600"># Technical specifications</span></div>
-  <div className="pl-8">└── api/ <span className="text-slate-600"># Generated API docs</span></div>
-  <div className="pl-4">├── src/</div>
-  <div className="pl-8">├── components/ <span className="text-slate-500"># React Components (ChatWidget, Search)</span></div>
-  <div className="pl-8">├── pages/ <span className="text-slate-500"># Landing Page (index.js)</span></div>
-  <div className="pl-4">├── static/ <span className="text-slate-500"># Images & Public Assets</span></div>
-  <div className="pl-4">├── docusaurus.config.js <span className="text-slate-500"># Main configuration</span></div>
-  <div className="pl-4">└── sidebars.js <span className="text-slate-500"># Navigation structure</span></div>
+{/* Section 4.1 */}
+<div>
+  <h2 className="text-4xl font-bold text-white mb-6 flex items-center gap-3">
+    <span className="text-4xl">📚</span>
+    4.1 Why Docusaurus?
+  </h2>
+  
+  <div className="bg-gradient-to-br from-blue-950 via-slate-900 to-purple-950 rounded-2xl p-8 border border-blue-800/30 shadow-xl">
+    <p className="text-xl text-slate-200 leading-relaxed mb-4">
+      In Spec-Driven Development, the specification is a <strong className="text-cyan-400">living document</strong>. 
+      It needs to be versioned, searchable, and accessible.
+    </p>
+    
+    <div className="bg-slate-900/50 rounded-lg p-6 border border-slate-700 mt-6">
+      <p className="text-lg text-white font-bold mb-2">We choose Docusaurus because:</p>
+      <p className="text-slate-300">It supports <strong className="text-cyan-400">MDX</strong> (React in Markdown), allowing us to embed interactive AI widgets directly into our specs.</p>
+    </div>
+  </div>
 </div>
 
-## 4.3 Initializing the Project
-
-Run the following commands to bootstrap the environment:
-
-<div className="bg-slate-900 p-4 rounded-lg my-4 font-mono text-sm border-l-4 border-brand-500">
-  <div className="text-slate-400"># Initialize new Docusaurus project</div>
-  <div className="text-white">npx create-docusaurus@latest my-ai-platform classic</div>
-  <div className="h-2"></div>
-  <div className="text-slate-400"># Navigate to directory</div>
-  <div className="text-white">cd my-ai-platform</div>
-  <div className="h-2"></div>
-  <div className="text-slate-400"># Install dependencies</div>
-  <div className="text-white">npm install</div>
-  <div className="h-2"></div>
-  <div className="text-slate-400"># Start local dev server</div>
-  <div className="text-white">npm start</div>
+{/* Section 4.2 - Project Structure */}
+<div>
+  <h2 className="text-4xl font-bold text-white mb-6 flex items-center gap-3">
+    <span className="text-4xl">🏗️</span>
+    4.2 Project Structure
+  </h2>
+  
+  <p className="text-lg text-slate-300 mb-6 leading-relaxed">
+    We will scaffold the project to separate static documentation from our dynamic AI application logic. 
+    This structure ensures <strong className="text-cyan-400">clean separation of concerns</strong>.
+  </p>
+  
+  <div className="bg-slate-900 rounded-2xl p-6 border border-slate-700 shadow-xl">
+    <div className="flex items-center gap-3 mb-4">
+      <span className="text-2xl">📁</span>
+      <h4 className="text-lg font-bold text-cyan-400">Directory Structure</h4>
+    </div>
+    
+    <div className="bg-slate-950 rounded-lg p-6 border border-slate-800 font-mono text-sm">
+      <div className="space-y-1 text-slate-300">
+        <div className="text-cyan-400">my-ai-platform/</div>
+        <div className="pl-4">├── <span className="text-blue-400">docs/</span> <span className="text-slate-500"># The Source of Truth (Specs & Guides)</span></div>
+        <div className="pl-8">├── architecture/</div>
+        <div className="pl-8">├── specs/</div>
+        <div className="pl-8">└── api/</div>
+        <div className="pl-4">├── <span className="text-purple-400">src/</span></div>
+        <div className="pl-8">├── components/ <span className="text-slate-500"># React Components</span></div>
+        <div className="pl-8">├── pages/</div>
+        <div className="pl-4">├── <span className="text-green-400">static/</span> <span className="text-slate-500"># Images & Assets</span></div>
+        <div className="pl-4">├── docusaurus.config.js</div>
+        <div className="pl-4">└── sidebars.js</div>
+      </div>
+    </div>
+  </div>
 </div>
 
-## 4.4 Configuration: docusaurus.config.js
+{/* Section 4.3 - Initialization */}
+<div>
+  <h2 className="text-4xl font-bold text-white mb-6 flex items-center gap-3">
+    <span className="text-4xl">⚡</span>
+    4.3 Initializing the Project
+  </h2>
+  
+  <p className="text-lg text-slate-300 mb-6 leading-relaxed">
+    Run the following commands to bootstrap the environment:
+  </p>
+  
+  <div className="bg-slate-900 rounded-2xl p-6 border border-slate-700 shadow-xl">
+    <div className="bg-slate-950 rounded-lg p-6 border-l-4 border-cyan-500 font-mono text-sm space-y-4">
+      <div>
+        <p className="text-slate-500 mb-1"># Initialize new Docusaurus project</p>
+        <p className="text-cyan-400">npx create-docusaurus@latest my-ai-platform classic</p>
+      </div>
+      
+      <div>
+        <p className="text-slate-500 mb-1"># Navigate to directory</p>
+        <p className="text-cyan-400">cd my-ai-platform</p>
+      </div>
+      
+      <div>
+        <p className="text-slate-500 mb-1"># Install dependencies</p>
+        <p className="text-cyan-400">npm install</p>
+      </div>
+      
+      <div>
+        <p className="text-slate-500 mb-1"># Start local dev server</p>
+        <p className="text-cyan-400">npm start</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-This configuration enables the preset for classic docs, blogs, and pages, and sets up our theme. It is the control center for your documentation site.
-
-<div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
-  <h4 className="text-brand-400 font-bold mb-2">docusaurus.config.js</h4>
-  <pre className="text-xs text-slate-300 overflow-x-auto">
-{`module.exports = {
+{/* Section 4.4 - Configuration */}
+<div>
+  <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+    <span className="text-3xl">⚙️</span>
+    4.4 Configuration: docusaurus.config.js
+  </h3>
+  
+  <p className="text-lg text-slate-300 mb-6 leading-relaxed">
+    This configuration enables the preset for classic docs, blogs, and pages. It is the <strong className="text-cyan-400">control center</strong> for your documentation site.
+  </p>
+  
+  <div className="bg-slate-900 rounded-2xl p-6 border border-slate-700 shadow-xl">
+    <div className="flex items-center gap-3 mb-4">
+      <span className="text-2xl">💻</span>
+      <h4 className="text-lg font-bold text-cyan-400">docusaurus.config.js</h4>
+    </div>
+    
+    <div className="bg-slate-950 rounded-lg p-6 border border-slate-800 font-mono text-xs overflow-x-auto">
+      <pre className="text-slate-300">{`module.exports = {
   title: 'AI-Native Spec Platform',
   tagline: 'From Intent to Implementation',
   url: 'https://your-org.github.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'your-org',
-  projectName: 'ai-spec-platform',
   presets: [
     [
       '@docusaurus/preset-classic',
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/your-org/ai-spec-platform/edit/main/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -69,59 +130,91 @@ This configuration enables the preset for classic docs, blogs, and pages, and se
       },
     ],
   ],
-};`}
-  </pre>
+};`}</pre>
+    </div>
+  </div>
 </div>
 
-## 4.5 Sidebar Strategy: sidebars.js
-
-Our sidebar reflects the development lifecycle: Context -> Specs -> API -> Deployment. This mapping ensures that developers find exactly what they need based on their current task.
-
-<div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
-  <h4 className="text-brand-400 font-bold mb-2">sidebars.js</h4>
-  <pre className="text-xs text-slate-300 overflow-x-auto">
-{`module.exports = {
-  tutorialSidebar: [
-    {
-      type: 'category',
-      label: '1. Architecture & Intent',
-      items: ['intro', 'architecture/overview', 'architecture/principles'],
-    },
-    {
-      type: 'category',
-      label: '2. Technical Specs',
-      items: [
-        'specs/auth-system',
-        'specs/vector-db-schema',
-        'specs/agent-protocols',
-      ],
-    },
-    {
-      type: 'category',
-      label: '3. API Reference',
-      items: ['api/fastapi-endpoints', 'api/sdk-usage'],
-    },
-  ],
-};`}
-  </pre>
+{/* Section 4.5 - Sidebar */}
+<div>
+  <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+    <span className="text-3xl">📑</span>
+    4.5 Sidebar Strategy
+  </h3>
+  
+  <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-xl p-6 border border-cyan-500/30 mb-6">
+    <p className="text-lg text-slate-200 leading-relaxed">
+      Our sidebar reflects the development lifecycle: <strong className="text-cyan-400">Context → Specs → API → Deployment</strong>
+    </p>
+  </div>
+  
+  <div className="grid md:grid-cols-3 gap-4">
+    <div className="bg-slate-900 rounded-lg p-4 border border-slate-700">
+      <div className="text-2xl mb-2">📐</div>
+      <h4 className="font-bold text-white mb-1">Architecture</h4>
+      <p className="text-sm text-slate-400">High-level design & principles</p>
+    </div>
+    
+    <div className="bg-slate-900 rounded-lg p-4 border border-slate-700">
+      <div className="text-2xl mb-2">📋</div>
+      <h4 className="font-bold text-white mb-1">Specs</h4>
+      <p className="text-sm text-slate-400">Technical specifications</p>
+    </div>
+    
+    <div className="bg-slate-900 rounded-lg p-4 border border-slate-700">
+      <div className="text-2xl mb-2">🔌</div>
+      <h4 className="font-bold text-white mb-1">API</h4>
+      <p className="text-sm text-slate-400">Endpoints & SDK usage</p>
+    </div>
+  </div>
 </div>
 
-## 4.6 Deployment Pipeline
-
-To deploy this as a static site to GitHub Pages:
-
-<div className="bg-slate-800 p-4 rounded-lg my-4 font-mono text-sm border-l-4 border-green-500">
-  <div className="text-slate-400"># 1. Build the static site</div>
-  <div className="text-white">npm run build</div>
-  <div className="h-2"></div>
-  <div className="text-slate-400"># 2. Deploy (assumes SSH configured)</div>
-  <div className="text-white">GIT_USER=yourusername npm run deploy</div>
+{/* Section 4.6 - Deployment */}
+<div>
+  <h2 className="text-4xl font-bold text-white mb-6 flex items-center gap-3">
+    <span className="text-4xl">🚀</span>
+    4.6 Deployment Pipeline
+  </h2>
+  
+  <p className="text-lg text-slate-300 mb-6 leading-relaxed">
+    To deploy this as a static site to GitHub Pages:
+  </p>
+  
+  <div className="bg-slate-900 rounded-2xl p-6 border border-slate-700 shadow-xl">
+    <div className="bg-slate-950 rounded-lg p-6 border-l-4 border-green-500 font-mono text-sm space-y-4">
+      <div>
+        <p className="text-slate-500 mb-1"># 1. Build the static site</p>
+        <p className="text-green-400">npm run build</p>
+      </div>
+      
+      <div>
+        <p className="text-slate-500 mb-1"># 2. Deploy (assumes SSH configured)</p>
+        <p className="text-green-400">GIT_USER=yourusername npm run deploy</p>
+      </div>
+    </div>
+  </div>
 </div>
 
-## 4.7 Integrating the RAG Widget
+{/* Section 4.7 - RAG Widget */}
+<div>
+  <h2 className="text-4xl font-bold text-white mb-6 flex items-center gap-3">
+    <span className="text-4xl">🤖</span>
+    4.7 Integrating the RAG Widget
+  </h2>
+  
+  <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl p-6 border border-purple-500/30">
+    <p className="text-lg text-slate-200 leading-relaxed mb-4">
+      In Phase 3, we will build the RAG widget. To prepare Docusaurus, we must enable <strong className="text-purple-400">SWIZZLING</strong> of the Root layout.
+    </p>
+    
+    <div className="bg-slate-900/50 rounded-lg p-4 border border-slate-700 font-mono text-sm">
+      <p className="text-cyan-400">npm run swizzle @docusaurus/theme-classic Root -- --wrap</p>
+    </div>
+    
+    <p className="text-slate-300 mt-4 italic">
+      This creates a wrapper component where we will place our <code className="text-purple-400 bg-slate-900 px-2 py-1 rounded">&lt;AIChatProvider&gt;</code> context.
+    </p>
+  </div>
+</div>
 
-In Phase 3, we will build the RAG widget. To prepare Docusaurus, we must enable **SWIZZLING** of the Root layout to inject our global AI Chat provider.
-
-Command: `npm run swizzle @docusaurus/theme-classic Root -- --wrap`
-
-This creates a wrapper component where we will place our `<AIChatProvider>` context.
+</div>
