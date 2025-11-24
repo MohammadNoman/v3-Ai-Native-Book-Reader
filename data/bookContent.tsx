@@ -126,5 +126,119 @@ async def run_agent(query: str):
       </div>,
       "In the next chapter, we will perform our first 'Hello World' of AI-Native development: generating a microservice entirely from a natural language prompt."
     ]
+  },
+  {
+    id: "chapter-4",
+    title: "Chapter 4",
+    subtitle: "The Documentation Engine (Docusaurus)",
+    content: [
+      "## 4.1 Why Docusaurus?",
+      "In Spec-Driven Development, the specification is a living document. It needs to be versioned, searchable, and accessible. We choose **Docusaurus** because it supports MDX (React in Markdown), allowing us to embed interactive AI widgets directly into our specs.",
+      "## 4.2 Project Structure",
+      "We will scaffold the project to separate static documentation from our dynamic AI application logic. This structure ensures clean separation of concerns.",
+      <div className="bg-slate-900 p-4 rounded-lg my-4 font-mono text-xs text-brand-100 border border-slate-800">
+        <div>my-ai-platform/</div>
+        <div className="pl-4">├── docs/ <span className="text-slate-500"># The Source of Truth (Specs & Guides)</span></div>
+        <div className="pl-8">├── architecture/ <span className="text-slate-600"># High-level design</span></div>
+        <div className="pl-8">├── specs/ <span className="text-slate-600"># Technical specifications</span></div>
+        <div className="pl-8">└── api/ <span className="text-slate-600"># Generated API docs</span></div>
+        <div className="pl-4">├── src/</div>
+        <div className="pl-8">├── components/ <span className="text-slate-500"># React Components (ChatWidget, Search)</span></div>
+        <div className="pl-8">├── pages/ <span className="text-slate-500"># Landing Page (index.js)</span></div>
+        <div className="pl-4">├── static/ <span className="text-slate-500"># Images & Public Assets</span></div>
+        <div className="pl-4">├── docusaurus.config.js <span className="text-slate-500"># Main configuration</span></div>
+        <div className="pl-4">└── sidebars.js <span className="text-slate-500"># Navigation structure</span></div>
+      </div>,
+      "## 4.3 Initializing the Project",
+      "Run the following commands to bootstrap the environment:",
+      <div className="bg-slate-900 p-4 rounded-lg my-4 font-mono text-sm border-l-4 border-brand-500">
+        <div className="text-slate-400"># Initialize new Docusaurus project</div>
+        <div className="text-white">npx create-docusaurus@latest my-ai-platform classic</div>
+        <div className="h-2"></div>
+        <div className="text-slate-400"># Navigate to directory</div>
+        <div className="text-white">cd my-ai-platform</div>
+        <div className="h-2"></div>
+        <div className="text-slate-400"># Install dependencies</div>
+        <div className="text-white">npm install</div>
+        <div className="h-2"></div>
+        <div className="text-slate-400"># Start local dev server</div>
+        <div className="text-white">npm start</div>
+      </div>,
+      "## 4.4 Configuration: docusaurus.config.js",
+      "This configuration enables the preset for classic docs, blogs, and pages, and sets up our theme. It is the control center for your documentation site.",
+      <div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
+        <h4 className="text-brand-400 font-bold mb-2">docusaurus.config.js</h4>
+        <pre className="text-xs text-slate-300 overflow-x-auto">
+{`module.exports = {
+  title: 'AI-Native Spec Platform',
+  tagline: 'From Intent to Implementation',
+  url: 'https://your-org.github.io',
+  baseUrl: '/',
+  onBrokenLinks: 'throw',
+  onBrokenMarkdownLinks: 'warn',
+  favicon: 'img/favicon.ico',
+  organizationName: 'your-org',
+  projectName: 'ai-spec-platform',
+  presets: [
+    [
+      '@docusaurus/preset-classic',
+      {
+        docs: {
+          sidebarPath: require.resolve('./sidebars.js'),
+          editUrl: 'https://github.com/your-org/ai-spec-platform/edit/main/',
+        },
+        theme: {
+          customCss: require.resolve('./src/css/custom.css'),
+        },
+      },
+    ],
+  ],
+};`}
+        </pre>
+      </div>,
+      "## 4.5 Sidebar Strategy: sidebars.js",
+      "Our sidebar reflects the development lifecycle: Context -> Specs -> API -> Deployment. This mapping ensures that developers find exactly what they need based on their current task.",
+      <div className="bg-slate-900 p-6 rounded-lg my-6 border border-slate-700">
+        <h4 className="text-brand-400 font-bold mb-2">sidebars.js</h4>
+        <pre className="text-xs text-slate-300 overflow-x-auto">
+{`module.exports = {
+  tutorialSidebar: [
+    {
+      type: 'category',
+      label: '1. Architecture & Intent',
+      items: ['intro', 'architecture/overview', 'architecture/principles'],
+    },
+    {
+      type: 'category',
+      label: '2. Technical Specs',
+      items: [
+        'specs/auth-system',
+        'specs/vector-db-schema',
+        'specs/agent-protocols',
+      ],
+    },
+    {
+      type: 'category',
+      label: '3. API Reference',
+      items: ['api/fastapi-endpoints', 'api/sdk-usage'],
+    },
+  ],
+};`}
+        </pre>
+      </div>,
+      "## 4.6 Deployment Pipeline",
+      "To deploy this as a static site to GitHub Pages:",
+      <div className="bg-slate-800 p-4 rounded-lg my-4 font-mono text-sm border-l-4 border-green-500">
+        <div className="text-slate-400"># 1. Build the static site</div>
+        <div className="text-white">npm run build</div>
+        <div className="h-2"></div>
+        <div className="text-slate-400"># 2. Deploy (assumes SSH configured)</div>
+        <div className="text-white">GIT_USER=yourusername npm run deploy</div>
+      </div>,
+      "## 4.7 Integrating the RAG Widget",
+      "In Phase 3, we will build the RAG widget. To prepare Docusaurus, we must enable **SWIZZLING** of the Root layout to inject our global AI Chat provider.",
+      "Command: `npm run swizzle @docusaurus/theme-classic Root -- --wrap`",
+      "This creates a wrapper component where we will place our `<AIChatProvider>` context."
+    ]
   }
 ];
