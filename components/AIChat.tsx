@@ -41,7 +41,8 @@ const AIChat: React.FC<AIChatProps> = ({ activeChapter }) => {
       const ai = new GoogleGenAI({ apiKey });
 
       // Construct context from the current chapter content
-      const chapterText = activeChapter.rawContent;
+      // Safely convert rawContent to string in case it's not already
+      const chapterText = String(activeChapter.rawContent || '');
 
       const systemPrompt = `
         You are an expert AI Tutor for the book "AI-Native & Spec-Driven Software Development".
