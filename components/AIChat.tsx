@@ -32,11 +32,13 @@ const AIChat: React.FC<AIChatProps> = ({ activeChapter }) => {
     setError(null);
 
     try {
-      if (!process.env.API_KEY) {
-        throw new Error("API_KEY not set.");
+      const apiKey = process.env.GEMINI_API_KEY;
+
+      if (!apiKey) {
+        throw new Error("API key not configured. Please set VITE_GEMINI_API_KEY in your environment variables.");
       }
 
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey });
 
       // Construct context from the current chapter content
       const chapterText = activeChapter.rawContent;
@@ -116,8 +118,8 @@ const AIChat: React.FC<AIChatProps> = ({ activeChapter }) => {
           {messages.map((msg) => (
             <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${msg.role === 'user'
-                  ? 'bg-brand-600 text-white rounded-br-none'
-                  : 'bg-slate-800 text-slate-200 rounded-bl-none border border-slate-700'
+                ? 'bg-brand-600 text-white rounded-br-none'
+                : 'bg-slate-800 text-slate-200 rounded-bl-none border border-slate-700'
                 }`}>
                 {msg.text}
               </div>

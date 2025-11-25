@@ -1,34 +1,28 @@
+import { lazy } from 'react';
 import { Chapter } from '../types';
 
-// Import MDX Components and Raw Content
-import Preface from './chapters/preface.mdx';
+// Dynamic imports for MDX Components (lazy-loaded for code splitting)
+const Preface = lazy(() => import('./chapters/preface.mdx'));
+const Chapter1 = lazy(() => import('./chapters/chapter-1.mdx'));
+const Chapter2 = lazy(() => import('./chapters/chapter-2.mdx'));
+const Chapter3 = lazy(() => import('./chapters/chapter-3.mdx'));
+const Chapter4 = lazy(() => import('./chapters/chapter-4.mdx'));
+const Chapter5 = lazy(() => import('./chapters/chapter-5.mdx'));
+const Chapter6 = lazy(() => import('./chapters/chapter-6.mdx'));
+const Chapter7 = lazy(() => import('./chapters/chapter-7.mdx'));
+const Appendix = lazy(() => import('./chapters/appendix.mdx'));
+const ThankYou = lazy(() => import('./chapters/thank-you.mdx'));
+
+// Import raw content for Table of Contents (small, can be bundled)
 import prefaceRaw from './chapters/preface.mdx?raw';
-
-import Chapter1 from './chapters/chapter-1.mdx';
 import chapter1Raw from './chapters/chapter-1.mdx?raw';
-
-import Chapter2 from './chapters/chapter-2.mdx';
 import chapter2Raw from './chapters/chapter-2.mdx?raw';
-
-import Chapter3 from './chapters/chapter-3.mdx';
 import chapter3Raw from './chapters/chapter-3.mdx?raw';
-
-import Chapter4 from './chapters/chapter-4.mdx';
 import chapter4Raw from './chapters/chapter-4.mdx?raw';
-
-import Chapter5 from './chapters/chapter-5.mdx';
 import chapter5Raw from './chapters/chapter-5.mdx?raw';
-
-import Chapter6 from './chapters/chapter-6.mdx';
 import chapter6Raw from './chapters/chapter-6.mdx?raw';
-
-import Chapter7 from './chapters/chapter-7.mdx';
 import chapter7Raw from './chapters/chapter-7.mdx?raw';
-
-import Appendix from './chapters/appendix.mdx';
 import appendixRaw from './chapters/appendix.mdx?raw';
-
-import ThankYou from './chapters/thank-you.mdx';
 import thankYouRaw from './chapters/thank-you.mdx?raw';
 
 export const CHAPTERS: Chapter[] = [

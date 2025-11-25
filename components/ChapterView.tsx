@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { MDXProvider } from '@mdx-js/react';
 import { Chapter } from '../types';
 import TableOfContents from './TableOfContents';
@@ -30,6 +30,16 @@ const mdxComponents = {
   h4: createHeadingComponent(4),
 };
 
+// Loading component for lazy-loaded chapters
+const ChapterLoader = () => (
+  <div className="flex items-center justify-center py-24">
+    <div className="flex flex-col items-center gap-4">
+      <div className="w-12 h-12 border-4 border-brand-400 border-t-transparent rounded-full animate-spin"></div>
+      <p className="text-slate-400 text-sm animate-pulse">Loading chapter...</p>
+    </div>
+  </div>
+);
+
 const ChapterView: React.FC<ChapterViewProps> = ({ chapter }) => {
   return (
     <div className="flex gap-8 max-w-7xl mx-auto px-6 py-12 md:py-16 animate-fade-in">
@@ -41,9 +51,11 @@ const ChapterView: React.FC<ChapterViewProps> = ({ chapter }) => {
         </header>
 
         <article className="prose prose-invert prose-lg max-w-none prose-headings:text-slate-100 prose-p:text-slate-300 prose-strong:text-white prose-code:text-brand-300">
-          <MDXProvider components={mdxComponents}>
-            <chapter.Component />
-          </MDXProvider>
+          <Suspense fallback={<ChapterLoader />}>
+            <MDXProvider components={mdxComponents}>
+              <chapter.Component />
+            </MDXProvider>
+          </Suspense>
         </article>
 
         <div className="mt-16 pt-8 border-t border-slate-800 flex justify-between text-slate-500 text-sm">
